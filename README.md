@@ -6,29 +6,6 @@ Abinaya G — Department of Information Technology, Saveetha Engineering College
 
 ---
 
-## ⚠️ This repository supersedes an earlier version of this project
-
-An earlier version of this README described a different manuscript
-("*Privacy-Preserving Cross-Subject Motor Imagery EEG Classification
-via Federated Learning: When Simple Averaging Beats Explicit Domain
-Adaptation*", submitted to *Expert Systems with Applications*) with a
-headline FedAvg result of 46.67%. That result was later found, during
-a full methodological audit, to have been computed under a
-**personalized evaluation protocol rather than genuine
-leave-one-subject-out (LOSO)** — the personalization allowed implicit
-leakage of target-subject information, inflating every reported
-number. **All numbers, scripts, and claims from that earlier version
-are superseded and should not be used or cited.**
-
-This repository now reflects the current manuscript, submitted to
-*Biomedical Signal Processing and Control* (BSPC), built entirely on
-genuine LOSO re-verification with paired statistical testing. The
-PhysioNet dataset and the previously claimed "~231-trial data
-sufficiency threshold" are **not** part of the current manuscript and
-are not represented in this repository.
-
----
-
 ## Overview
 
 This repository contains the experimental code for:
