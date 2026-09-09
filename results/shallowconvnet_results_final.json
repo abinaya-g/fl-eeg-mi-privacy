@@ -1,0 +1,116 @@
+{
+  "centralised": {
+    "S1": {
+      "test_acc": 0.4965,
+      "test_f1": 0.4846
+    },
+    "S2": {
+      "test_acc": 0.2847,
+      "test_f1": 0.2036
+    },
+    "S3": {
+      "test_acc": 0.5087,
+      "test_f1": 0.5025
+    },
+    "S4": {
+      "test_acc": 0.3472,
+      "test_f1": 0.2879
+    },
+    "S5": {
+      "test_acc": 0.2292,
+      "test_f1": 0.1528
+    },
+    "S6": {
+      "test_acc": 0.2674,
+      "test_f1": 0.2395
+    },
+    "S7": {
+      "test_acc": 0.2361,
+      "test_f1": 0.1815
+    },
+    "S8": {
+      "test_acc": 0.5694,
+      "test_f1": 0.5511
+    },
+    "S9": {
+      "test_acc": 0.4306,
+      "test_f1": 0.4213
+    }
+  },
+  "local_only": {
+    "S1": {
+      "ensemble_acc": 0.4861,
+      "ensemble_f1": 0.4634
+    },
+    "S2": {
+      "ensemble_acc": 0.2778,
+      "ensemble_f1": 0.1735
+    },
+    "S3": {
+      "ensemble_acc": 0.4669,
+      "ensemble_f1": 0.4279
+    },
+    "S4": {
+      "ensemble_acc": 0.3194,
+      "ensemble_f1": 0.2434
+    },
+    "S5": {
+      "ensemble_acc": 0.2465,
+      "ensemble_f1": 0.0992
+    },
+    "S6": {
+      "ensemble_acc": 0.2535,
+      "ensemble_f1": 0.2478
+    },
+    "S7": {
+      "ensemble_acc": 0.2708,
+      "ensemble_f1": 0.2449
+    },
+    "S8": {
+      "ensemble_acc": 0.4479,
+      "ensemble_f1": 0.4118
+    },
+    "S9": {
+      "ensemble_acc": 0.3785,
+      "ensemble_f1": 0.3287
+    }
+  },
+  "fedavg": {
+    "S1": {
+      "test_acc": 0.5139,
+      "test_f1": 0.473
+    },
+    "S2": {
+      "test_acc": 0.2778,
+      "test_f1": 0.1902
+    },
+    "S3": {
+      "test_acc": 0.6028,
+      "test_f1": 0.5861
+    },
+    "S4": {
+      "test_acc": 0.3507,
+      "test_f1": 0.2887
+    },
+    "S5": {
+      "test_acc": 0.2708,
+      "test_f1": 0.1466
+    },
+    "S6": {
+      "test_acc": 0.2743,
+      "test_f1": 0.2577
+    },
+    "S7": {
+      "test_acc": 0.2882,
+      "test_f1": 0.2412
+    },
+    "S8": {
+      "test_acc": 0.6146,
+      "test_f1": 0.5484
+    },
+    "S9": {
+      "test_acc": 0.4306,
+      "test_f1": 0.3952
+    }
+  }
+}
