@@ -1,0 +1,115 @@
+name: Alignment decomposition on a second dataset (BNCI 2014-002) + 2a reproduction check
+
+# Runs on push to the fedra-riemannian branch. One job per (dataset, arm, seed, LOSO fold):
+#   BNCI 2014-002: 5 arms x 2 seeds x 14 folds = 140 jobs
+#   BCI IV-2a reproduction check (unified script): fedavg + ea, seed 42, 9 folds = 18 jobs
+on:
+  push:
+    branches: [fedra-riemannian]
+    paths: ['src/25_decomposition_multidataset.py', '.github/workflows/decomposition-second-dataset.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - id: m
+        shell: python
+        run: |
+          import json, os
+          inc = [dict(dataset="bnci2014002", arm=a, seed=s, fold=f)
+                 for a in ["fedavg", "ea", "ea_inductive", "ra_global", "ra_local"]
+                 for s in [42, 123] for f in range(1, 15)]
+          inc += [dict(dataset="bci2a", arm=a, seed=42, fold=f)
+                  for a in ["fedavg", "ea"] for f in range(1, 10)]
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              fh.write("matrix=" + json.dumps({"include": inc}) + "\n")
+          print(len(inc), "jobs")
+
+  fetch-data:
+    runs-on: ubuntu-latest
+    steps:
+      - id: c002
+        uses: actions/cache@v4
+        with:
+          path: data/bnci2014002
+          key: bnci-2014-002-v1
+      - if: steps.c002.outputs.cache-hit != 'true'
+        name: Download BNCI 2014-002
+        run: |
+          mkdir -p data/bnci2014002
+          for s in $(seq -w 1 14); do for k in T E; do
+            curl -fsSL --retry 5 --retry-delay 10 -o "data/bnci2014002/S${s}${k}.mat" \
+              "http://bnci-horizon-2020.eu/database/data-sets/002-2014/S${s}${k}.mat"
+          done; done
+          test "$(ls data/bnci2014002/*.mat | wc -l)" -eq 28
+      - id: c2a
+        uses: actions/cache@v4
+        with:
+          path: data/bci2a
+          key: bci-iv-2a-bnci-001-2014-v1
+      - if: steps.c2a.outputs.cache-hit != 'true'
+        name: Download BCI IV-2a
+        run: |
+          mkdir -p data/bci2a
+          for s in 1 2 3 4 5 6 7 8 9; do for k in T E; do
+            curl -fsSL --retry 5 --retry-delay 10 -o "data/bci2a/A0${s}${k}.mat" \
+              "http://bnci-horizon-2020.eu/database/data-sets/001-2014/A0${s}${k}.mat"
+          done; done
+          test "$(ls data/bci2a/*.mat | wc -l)" -eq 18
+
+  run:
+    needs: [plan, fetch-data]
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    name: ${{ matrix.dataset }} ${{ matrix.arm }} seed${{ matrix.seed }} S${{ matrix.fold }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/${{ matrix.dataset }}
+          key: ${{ matrix.dataset == 'bci2a' && 'bci-iv-2a-bnci-001-2014-v1' || 'bnci-2014-002-v1' }}
+          fail-on-cache-miss: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies (CPU torch)
+        run: |
+          pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+          pip install numpy==1.26.4 scipy==1.13.1 scikit-learn==1.5.2
+      - name: Run LOSO fold
+        run: |
+          python -u src/25_decomposition_multidataset.py \
+            --dataset ${{ matrix.dataset }} --arm ${{ matrix.arm }} \
+            --seed ${{ matrix.seed }} --fold ${{ matrix.fold }} \
+            --data-dir data/${{ matrix.dataset }} --out-dir results/decomposition
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dec-${{ matrix.dataset }}-${{ matrix.arm }}-seed${{ matrix.seed }}-S${{ matrix.fold }}
+          path: results/decomposition/*.json
+
+  collect:
+    needs: run
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: dec-*
+          path: results/decomposition
+          merge-multiple: true
+      - run: ls results/decomposition | wc -l
+      - uses: actions/upload-artifact@v4
+        with:
+          name: decomposition-all-results
+          path: results/decomposition/
