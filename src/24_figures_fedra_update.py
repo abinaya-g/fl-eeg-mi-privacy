@@ -64,7 +64,7 @@ def fig_main():
         ("FedCL (warmup 30→100%)", FEDCL_W30, ORANGE),
         ("FedCL (warmup 50→100%)", FEDCL_W50, ORANGE),
         ("FedAvg (no alignment)", FEDAVG, BLUE),
-        ("Fed-EA (proposed)", FEDEA, GREEN),
+        ("Fed-EA", FEDEA, GREEN),
     ]
     fig, ax = plt.subplots(figsize=(12.9, 5.9))
     x = np.arange(len(rows))
