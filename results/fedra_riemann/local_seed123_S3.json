@@ -1,0 +1,17 @@
+{
+  "arm": "local",
+  "seed": 123,
+  "target": "S3",
+  "acc": 0.6864,
+  "f1": 0.6728,
+  "best_val": 0.4767,
+  "best_round": 95,
+  "rounds_run": 100,
+  "n_target_trials": 287,
+  "runtime_s": 1017.0,
+  "target_eig_min": 6.96043069874337e-05,
+  "target_eig_max": 0.7073862154018331,
+  "target_eig_ratio": 10162.966144171853,
+  "target_karcher_iters": 9,
+  "target_karcher_final_step": 3.9061367831894005e-09
+}

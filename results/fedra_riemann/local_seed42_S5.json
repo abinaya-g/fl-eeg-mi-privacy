@@ -1,0 +1,17 @@
+{
+  "arm": "local",
+  "seed": 42,
+  "target": "S5",
+  "acc": 0.2743,
+  "f1": 0.1854,
+  "best_val": 0.5901,
+  "best_round": 50,
+  "rounds_run": 70,
+  "n_target_trials": 288,
+  "runtime_s": 1352.9,
+  "target_eig_min": 4.986817531185359e-05,
+  "target_eig_max": 0.8140673824396276,
+  "target_eig_ratio": 16324.38679275528,
+  "target_karcher_iters": 9,
+  "target_karcher_final_step": 5.548809978290007e-09
+}

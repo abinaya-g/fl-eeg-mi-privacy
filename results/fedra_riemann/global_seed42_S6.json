@@ -1,0 +1,19 @@
+{
+  "arm": "global",
+  "seed": 42,
+  "target": "S6",
+  "acc": 0.2986,
+  "f1": 0.2504,
+  "best_val": 0.5145,
+  "best_round": 97,
+  "rounds_run": 100,
+  "n_target_trials": 288,
+  "runtime_s": 1551.8,
+  "eig_min": 7.630890281976695e-05,
+  "eig_max": 0.6741126768800927,
+  "eig_ratio": 8833.9977639604,
+  "karcher_iters": 9,
+  "karcher_final_step": 3.5275024963117105e-09,
+  "rel_diff_vs_pyriemann": 1.6485618709379312e-10,
+  "rel_diff_vs_arithmetic": 0.16408950935547104
+}
