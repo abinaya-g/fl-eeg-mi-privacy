@@ -1,0 +1,110 @@
+name: FedRA (true Riemannian mean) LOSO campaign
+
+# Runs on push to the fedra-riemannian branch (defaults below) or manually. One job per (arm, seed, LOSO fold): 2 x 2 x 9 = 36 CPU jobs.
+on:
+  push:
+    branches: [fedra-riemannian]
+    paths: ['src/22_fedra_riemannian.py', '.github/workflows/fedra-riemannian.yml']
+  workflow_dispatch:
+    inputs:
+      arms:
+        description: 'JSON list of arms'
+        default: '["global", "local"]'
+      seeds:
+        description: 'JSON list of seeds'
+        default: '[42, 123]'
+      folds:
+        description: 'JSON list of target subjects'
+        default: '[1, 2, 3, 4, 5, 6, 7, 8, 9]'
+      max_rounds:
+        description: 'FL rounds cap (100 = paper protocol; lower only for smoke tests)'
+        default: '100'
+
+permissions:
+  contents: read
+
+env:
+  DATA_DIR: data/bci2a
+  BNCI_URL: http://bnci-horizon-2020.eu/database/data-sets/001-2014
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    steps:
+      - id: cache
+        uses: actions/cache@v4
+        with:
+          path: data/bci2a
+          key: bci-iv-2a-bnci-001-2014-v1
+      - if: steps.cache.outputs.cache-hit != 'true'
+        name: Download BCI Competition IV-2a (BNCI Horizon 001-2014)
+        run: |
+          mkdir -p "$DATA_DIR"
+          for s in 1 2 3 4 5 6 7 8 9; do
+            for sess in T E; do
+              f="A0${s}${sess}.mat"
+              curl -fsSL --retry 5 --retry-delay 10 -o "$DATA_DIR/$f" "$BNCI_URL/$f"
+              echo "$f $(stat -c %s "$DATA_DIR/$f") bytes"
+            done
+          done
+          test "$(ls "$DATA_DIR"/*.mat | wc -l)" -eq 18
+
+  run:
+    needs: fetch-data
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        arm: ${{ fromJSON(inputs.arms || '["global", "local"]') }}
+        seed: ${{ fromJSON(inputs.seeds || '[42, 123]') }}
+        fold: ${{ fromJSON(inputs.folds || '[1, 2, 3, 4, 5, 6, 7, 8, 9]') }}
+    name: ${{ matrix.arm }} seed${{ matrix.seed }} S${{ matrix.fold }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/bci2a
+          key: bci-iv-2a-bnci-001-2014-v1
+          fail-on-cache-miss: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies (CPU torch)
+        run: |
+          pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+          pip install numpy==1.26.4 scipy==1.13.1 scikit-learn==1.5.2 pyriemann==0.7
+      - name: Run LOSO fold
+        run: |
+          python -u src/22_fedra_riemannian.py \
+            --arm ${{ matrix.arm }} --seed ${{ matrix.seed }} --fold ${{ matrix.fold }} \
+            --max-rounds ${{ inputs.max_rounds || 100 }} \
+            --data-dir "$DATA_DIR" --out-dir results/fedra_riemann
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fedra-${{ matrix.arm }}-seed${{ matrix.seed }}-S${{ matrix.fold }}
+          path: results/fedra_riemann/*.json
+
+  summarise:
+    needs: run
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==1.26.4 scipy==1.13.1
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: fedra-*
+          path: results/fedra_riemann
+          merge-multiple: true
+      - name: Paired significance (n=9, seed-averaged)
+        run: python src/23_fedra_riemannian_significance.py results/fedra_riemann | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fedra-riemann-all-results
+          path: results/fedra_riemann/
