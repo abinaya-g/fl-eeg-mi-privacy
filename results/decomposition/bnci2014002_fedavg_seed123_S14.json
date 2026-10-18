@@ -1,0 +1,14 @@
+{
+  "arm": "fedavg",
+  "seed": 123,
+  "target": "S14",
+  "acc": 0.4915,
+  "f1": 0.3568,
+  "best_val": 0.709,
+  "best_round": 38,
+  "rounds_run": 58,
+  "n_target_trials": 59,
+  "n_clients": 13,
+  "runtime_s": 215.4,
+  "dataset": "bnci2014002"
+}

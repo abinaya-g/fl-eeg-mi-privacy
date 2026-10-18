@@ -1,0 +1,17 @@
+{
+  "arm": "ra_global",
+  "seed": 123,
+  "target": "S1",
+  "acc": 0.4833,
+  "f1": 0.3258,
+  "best_val": 0.7347,
+  "best_round": 76,
+  "rounds_run": 96,
+  "n_target_trials": 60,
+  "n_clients": 13,
+  "runtime_s": 628.2,
+  "karcher_iters": 10,
+  "karcher_final_step": 3.7943676941518964e-09,
+  "eig_ratio": 709.6923517115786,
+  "dataset": "bnci2014002"
+}

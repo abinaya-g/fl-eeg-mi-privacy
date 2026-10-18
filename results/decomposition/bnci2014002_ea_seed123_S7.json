@@ -1,0 +1,14 @@
+{
+  "arm": "ea",
+  "seed": 123,
+  "target": "S7",
+  "acc": 0.95,
+  "f1": 0.9499,
+  "best_val": 0.7244,
+  "best_round": 65,
+  "rounds_run": 85,
+  "n_target_trials": 60,
+  "n_clients": 13,
+  "runtime_s": 460.3,
+  "dataset": "bnci2014002"
+}
