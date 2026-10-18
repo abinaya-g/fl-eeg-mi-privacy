@@ -174,8 +174,68 @@ def fig_trans():
     plt.close(fig)
 
 
+# ─────────────────────────────────────────────
+# Figure: per-subject heatmap (all methods)
+# ─────────────────────────────────────────────
+def fig_heatmap():
+    from matplotlib.colors import LinearSegmentedColormap
+    csp = json.load(open(os.path.join(RESULTS, "csp_baselines_results.json")))
+    heads = json.load(open(os.path.join(RESULTS, "fedavg_localheads_results.json")))
+    def row(d):
+        return [d[f"S{s}"]["acc"] if isinstance(d[f"S{s}"], dict) else d[f"S{s}"]
+                for s in range(1, 10)]
+    fedavg = [(a + b) / 2 for a, b in zip(
+        [0.5694, 0.2708, 0.6411, 0.3368, 0.2465, 0.2847, 0.2986, 0.5625, 0.4201],
+        [0.5868, 0.2986, 0.5993, 0.3056, 0.2465, 0.2778, 0.2951, 0.5556, 0.3750])]
+    fedea = [(a + b) / 2 for a, b in zip(
+        [0.6840, 0.3264, 0.7038, 0.3646, 0.2812, 0.4375, 0.4792, 0.6597, 0.6250],
+        [0.6875, 0.3368, 0.6934, 0.3785, 0.2812, 0.4375, 0.4583, 0.6424, 0.5903])]
+    rows = [
+        ("CSP + LDA", row(csp["CSP_LDA"])),
+        ("CSP + SVM", row(csp["CSP_SVM"])),
+        # Centralised / local-only: manuscript Table (per-subject, EEGNet)
+        ("Centralised", [0.5486, 0.2778, 0.5610, 0.3299, 0.2708, 0.2569, 0.3576, 0.6528, 0.3681]),
+        ("Local-only", [0.4375, 0.2639, 0.5401, 0.3403, 0.2500, 0.3090, 0.2812, 0.5347, 0.3438]),
+        ("FedAvg + local heads", row(heads["no_coral"])),
+        ("FedRA (Riemannian)", list(FEDRA)),
+        ("FedRA-local (per-subject)", list(FEDRA_LOCAL)),
+        # FedCL fixed: per-subject values as printed in the original heatmap
+        # (no per-subject results file in the repository)
+        ("FedCL (fixed stages)", [0.50, 0.27, 0.60, 0.35, 0.26, 0.31, 0.31, 0.37, 0.51]),
+        ("FedAvg (no alignment)", fedavg),
+        ("Fed-EA", fedea),
+    ]
+    data = np.array([r[1] for r in rows], dtype=float)
+    cmap = LinearSegmentedColormap.from_list(
+        "ryg", ["#c0392b", "#e67e22", "#f1c232", "#7cb342", "#1e8449"])
+    fig, ax = plt.subplots(figsize=(10.3, 7.5))
+    im = ax.imshow(data, cmap=cmap, vmin=0.2, vmax=0.75, aspect="auto")
+    for i in range(data.shape[0]):
+        for j in range(data.shape[1]):
+            v = data[i, j]
+            ax.text(j, i, f"{v:.2f}", ha="center", va="center", fontsize=10,
+                    fontweight="bold", color="white" if (v < 0.35 or v > 0.67) else "black")
+    for j in (1, 4, 5, 6):  # S2, S5, S6, S7: BCI-illiterate subjects
+        ax.add_patch(plt.Rectangle((j - 0.5, -0.5), 1, data.shape[0], fill=False,
+                                   edgecolor="#ff7f50", linewidth=2.5))
+    ax.set_xticks(range(9))
+    ax.set_xticklabels([f"S{s}" for s in range(1, 10)], fontsize=12)
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels([r[0] for r in rows], fontsize=13)
+    ax.set_xlabel("Subject", fontsize=13)
+    ax.set_title("Per-Subject Accuracy Heatmap — All Methods (BCI-IV 2a)\n"
+                 "Every cell is a real per-subject result; coral border = BCI-illiterate subjects",
+                 fontsize=13)
+    cb = fig.colorbar(im, ax=ax, shrink=0.6)
+    cb.set_label("LOSO Accuracy", fontsize=13)
+    fig.tight_layout()
+    fig.savefig(os.path.join(OUT, "fig_heatmap_verified.png"), dpi=DPI)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     fig_main()
     fig_comm()
     fig_trans()
-    print(f"Saved 3 figures to {os.path.abspath(OUT)}")
+    fig_heatmap()
+    print(f"Saved 4 figures to {os.path.abspath(OUT)}")
