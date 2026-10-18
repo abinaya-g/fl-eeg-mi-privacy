@@ -1,0 +1,17 @@
+{
+  "arm": "local",
+  "seed": 42,
+  "target": "S2",
+  "acc": 0.3056,
+  "f1": 0.2314,
+  "best_val": 0.6017,
+  "best_round": 72,
+  "rounds_run": 92,
+  "n_target_trials": 288,
+  "runtime_s": 1790.9,
+  "target_eig_min": 2.2744796200655585e-05,
+  "target_eig_max": 0.7611225304948473,
+  "target_eig_ratio": 33463.58981545454,
+  "target_karcher_iters": 9,
+  "target_karcher_final_step": 3.855297946743772e-09
+}

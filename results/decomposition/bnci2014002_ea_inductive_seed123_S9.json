@@ -1,0 +1,14 @@
+{
+  "arm": "ea_inductive",
+  "seed": 123,
+  "target": "S9",
+  "acc": 0.9138,
+  "f1": 0.9131,
+  "best_val": 0.7077,
+  "best_round": 32,
+  "rounds_run": 52,
+  "n_target_trials": 58,
+  "n_clients": 13,
+  "runtime_s": 415.5,
+  "dataset": "bnci2014002"
+}

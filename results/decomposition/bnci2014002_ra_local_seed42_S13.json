@@ -1,0 +1,16 @@
+{
+  "arm": "ra_local",
+  "seed": 42,
+  "target": "S13",
+  "acc": 0.5167,
+  "f1": 0.4844,
+  "best_val": 0.8034,
+  "best_round": 93,
+  "rounds_run": 100,
+  "n_target_trials": 60,
+  "n_clients": 13,
+  "runtime_s": 513.7,
+  "target_karcher_iters": 8,
+  "target_karcher_final_step": 3.8717131674128346e-09,
+  "dataset": "bnci2014002"
+}

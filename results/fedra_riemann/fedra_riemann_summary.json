@@ -1,0 +1,150 @@
+{
+  "per_arm": {
+    "global": {
+      "label": "FedRA-Riemann (global, inductive)",
+      "seeds": [
+        42,
+        123
+      ],
+      "per_seed_mean_pct": {
+        "123": 38.52,
+        "42": 38.72
+      },
+      "mean_pct": 38.62,
+      "per_subject": {
+        "S1": 0.5712,
+        "S2": 0.2708,
+        "S3": 0.5157,
+        "S4": 0.3577,
+        "S5": 0.276,
+        "S6": 0.3212,
+        "S7": 0.3281,
+        "S8": 0.4548,
+        "S9": 0.3802
+      }
+    },
+    "local": {
+      "label": "RA-local (per-subject, transductive)",
+      "seeds": [
+        42,
+        123
+      ],
+      "per_seed_mean_pct": {
+        "123": 43.62,
+        "42": 45.86
+      },
+      "mean_pct": 44.74,
+      "per_subject": {
+        "S1": 0.632,
+        "S2": 0.2761,
+        "S3": 0.6724,
+        "S4": 0.375,
+        "S5": 0.2916,
+        "S6": 0.3802,
+        "S7": 0.3785,
+        "S8": 0.5434,
+        "S9": 0.4774
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "comparison": "FedRA-Riemann (global, inductive) vs FedAvg",
+      "n": 9,
+      "mean_a_pct": 38.62,
+      "mean_b_pct": 39.84,
+      "mean_diff_pct": -1.22,
+      "t_p": 0.53769,
+      "wilcoxon_p": 1.0,
+      "dz": -0.215,
+      "bootstrap_95ci_pct": [
+        -4.85,
+        1.99
+      ]
+    },
+    {
+      "comparison": "Fed-EA vs FedRA-Riemann (global, inductive)",
+      "n": 9,
+      "mean_a_pct": 50.37,
+      "mean_b_pct": 38.62,
+      "mean_diff_pct": 11.75,
+      "t_p": 0.00207,
+      "wilcoxon_p": 0.00391,
+      "dz": 1.492,
+      "bootstrap_95ci_pct": [
+        6.84,
+        16.45
+      ]
+    },
+    {
+      "comparison": "FedRA-Riemann (global, inductive) vs FedRA-arith (orig.)",
+      "n": 9,
+      "mean_a_pct": 38.62,
+      "mean_b_pct": 40.72,
+      "mean_diff_pct": -2.1,
+      "t_p": 0.20385,
+      "wilcoxon_p": 0.25,
+      "dz": -0.461,
+      "bootstrap_95ci_pct": [
+        -5.0,
+        0.59
+      ]
+    },
+    {
+      "comparison": "RA-local (per-subject, transductive) vs FedAvg",
+      "n": 9,
+      "mean_a_pct": 44.74,
+      "mean_b_pct": 39.84,
+      "mean_diff_pct": 4.9,
+      "t_p": 0.00536,
+      "wilcoxon_p": 0.01953,
+      "dz": 1.261,
+      "bootstrap_95ci_pct": [
+        2.41,
+        7.12
+      ]
+    },
+    {
+      "comparison": "Fed-EA vs RA-local (per-subject, transductive)",
+      "n": 9,
+      "mean_a_pct": 50.37,
+      "mean_b_pct": 44.74,
+      "mean_diff_pct": 5.63,
+      "t_p": 0.00758,
+      "wilcoxon_p": 0.01953,
+      "dz": 1.181,
+      "bootstrap_95ci_pct": [
+        2.7,
+        8.55
+      ]
+    },
+    {
+      "comparison": "RA-local (per-subject, transductive) vs FedRA-arith (orig.)",
+      "n": 9,
+      "mean_a_pct": 44.74,
+      "mean_b_pct": 40.72,
+      "mean_diff_pct": 4.02,
+      "t_p": 0.05263,
+      "wilcoxon_p": 0.05469,
+      "dz": 0.758,
+      "bootstrap_95ci_pct": [
+        0.92,
+        7.36
+      ]
+    },
+    {
+      "comparison": "RA-local vs FedRA-Riemann",
+      "n": 9,
+      "mean_a_pct": 44.74,
+      "mean_b_pct": 38.62,
+      "mean_diff_pct": 6.12,
+      "t_p": 0.00504,
+      "wilcoxon_p": 0.00391,
+      "dz": 1.276,
+      "bootstrap_95ci_pct": [
+        3.3,
+        9.27
+      ]
+    }
+  ]
+}
